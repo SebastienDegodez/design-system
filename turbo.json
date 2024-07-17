@@ -1,0 +1,22 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "outputs": ["dist/**", "storybook-static/**"],
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "dependsOn": ["^lint", "eslint", "stylelint", "prettier", "tsc", "^build"]
+    },
+    "eslint": {},
+    "prettier": {},
+    "tsc": { "dependsOn": ["^build"] },
+    "stylelint": {
+      "dependsOn": ["^build"]
+    },
+    "start": {
+      "persistent": true,
+      "cache": false
+    }
+  }
+}
