@@ -50,9 +50,9 @@ jobs:
         run: |
           cd slash/react
           jq '.peerDependencies["@axa-fr/design-system-slash-css"] = "${{ steps.gitversion.outputs.fullSemVer }}"' package.json > temp.json && mv temp.json package.json
-      - run: npm publish -w slash/css -w slash/react --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - run: npm publish -w slash/css -w slash/react --access public
       - name: create artifact folder
         run: mkdir -p artifact/css & mkdir -p artifact/react
       - name: move storybooks to artifact folders
@@ -68,7 +68,7 @@ jobs:
 
   deploy:
     needs: build
-    if: needs.build.outputs.isStableRelease
+    # if: needs.build.outputs.isStableRelease
     runs-on: ubuntu-latest
     name: Deploy new version of storybook to gh-pages
     steps:
@@ -76,27 +76,30 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: storybooks
-      - name: Upload the latest react storybook
-        uses: peaceiris/actions-gh-pages@v4.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./artifact/react
-          destination_dir: slash/react/latest
-      - name: Upload the react storybook to its version folder
-        uses: peaceiris/actions-gh-pages@v4.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./artifact/react
-          destination_dir: slash/react/${{ needs.build.outputs.version }}
-      - name: Upload the latest css storybook
-        uses: peaceiris/actions-gh-pages@v4.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./artifact/css
-          destination_dir: slash/css/latest
-      - name: Upload the css to its version folder
-        uses: peaceiris/actions-gh-pages@v4.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./artifact/css
-          destination_dir: slash/css/${{ needs.build.outputs.version }}
+      - run: |
+          ls -la
+          ls storybooks
+      # - name: Upload the latest react storybook
+      #   uses: peaceiris/actions-gh-pages@v4.0.0
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./artifact/react
+      #     destination_dir: slash/react/latest
+      # - name: Upload the react storybook to its version folder
+      #   uses: peaceiris/actions-gh-pages@v4.0.0
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./artifact/react
+      #     destination_dir: slash/react/${{ needs.build.outputs.version }}
+      # - name: Upload the latest css storybook
+      #   uses: peaceiris/actions-gh-pages@v4.0.0
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./artifact/css
+      #     destination_dir: slash/css/latest
+      # - name: Upload the css to its version folder
+      #   uses: peaceiris/actions-gh-pages@v4.0.0
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./artifact/css
+      #     destination_dir: slash/css/${{ needs.build.outputs.version }}
